@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Enquiries | MAHAKAL BUILDCON</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/manager.css') }}">
+</head>
+<body class="mgr-body">
+<header class="bar">
+  <img src="{{ url_for('static', filename='images/Mahakal Buildcon Monochrome Logo.png') }}" alt="MAHAKAL BUILDCON">
+  <div class="bar-r">
+    <a class="btn ghost" href="{{ url_for('export_csv') }}">Download CSV</a>
+    <a class="btn ghost" href="{{ url_for('manager_settings') }}">Settings</a>
+    <form method="post" action="{{ url_for('manager_logout') }}"><input type="hidden" name="csrf" value="{{ csrf_token() }}"><button class="btn dark">Logout</button></form>
+  </div>
+</header>
+<main class="dash">
+  <h1>Client Enquiries</h1>
+  <p class="stats"><b>{{ total }}</b> total &nbsp;·&nbsp; <b>{{ new }}</b> new</p>
+  <form class="tools" method="get">
+    <nav class="tabs">
+      <a href="?f=all&q={{ q }}" class="{{ 'on' if f=='all' }}">All</a>
+      <a href="?f=new&q={{ q }}" class="{{ 'on' if f=='new' }}">New</a>
+      <a href="?f=done&q={{ q }}" class="{{ 'on' if f=='done' }}">Contacted</a>
+    </nav>
+    <input type="hidden" name="f" value="{{ f }}">
+    <input type="search" name="q" value="{{ q }}" placeholder="Search name, phone, email, location">
+    <button class="btn" type="submit">Search</button>
+  </form>
+  {% if rows %}
+  <div class="scroll"><table>
+    <thead><tr><th>#</th><th>Date</th><th>Name</th><th>Phone</th><th>Email</th><th>Project</th><th>Location</th><th>Budget</th><th>Message</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+    <tr class="{{ r['status'] }}">
+      <td>{{ r['id'] }}</td><td class="nw">{{ r['ist'] }}</td><td><b>{{ r['name'] }}</b></td>
+      <td class="nw"><a href="tel:{{ r['phone'] }}">{{ r['phone'] }}</a></td>
+      <td><a href="mailto:{{ r['email'] }}">{{ r['email'] }}</a></td>
+      <td>{{ r['project_type'] }}</td><td>{{ r['location'] or '-' }}</td><td>{{ r['budget'] or '-' }}</td>
+      <td class="msg">{{ r['message'] }}</td>
+      <td><form method="post" action="{{ url_for('toggle_status', eid=r['id']) }}"><input type="hidden" name="csrf" value="{{ csrf_token() }}">
+        <button class="pill {{ r['status'] }}" title="Click to change">{{ 'New' if r['status']=='new' else 'Contacted' }}</button></form></td>
+      <td><form method="post" action="{{ url_for('delete', eid=r['id']) }}" onsubmit="return confirm('Delete this enquiry permanently?')"><input type="hidden" name="csrf" value="{{ csrf_token() }}"><button class="del" aria-label="Delete enquiry">✕</button></form></td>
+    </tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% else %}<p class="empty">No enquiries found.</p>{% endif %}
+</main>
+</body>
+</html>

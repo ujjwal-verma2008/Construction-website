@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Manager Login | MAHAKAL BUILDCON</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/manager.css') }}">
+</head>
+<body class="mgr-body">
+<main class="login">
+  <img src="{{ url_for('static', filename='images/Mahakal Buildcon Monochrome Logo.png') }}" alt="MAHAKAL BUILDCON" class="login-logo">
+  <h1>Manager Login</h1>
+  {% if error %}<p class="err" role="alert">{{ error }}</p>{% endif %}
+  <form method="post" autocomplete="off">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <label>Username<input name="username" required autofocus autocomplete="username"></label>
+    <label>Password<input name="password" type="password" required autocomplete="current-password"></label>
+    <button class="btn" type="submit">Login</button>
+  </form>
+  <a class="back" href="{{ url_for('home') }}">← Back to website</a>
+</main>
+</body>
+</html>

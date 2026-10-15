@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Account Settings | MAHAKAL BUILDCON</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/manager.css') }}">
+</head>
+<body class="mgr-body">
+<header class="bar">
+  <img src="{{ url_for('static', filename='images/Mahakal Buildcon Monochrome Logo.png') }}" alt="MAHAKAL BUILDCON">
+  <div class="bar-r"><a class="btn ghost" href="{{ url_for('dashboard') }}">← Dashboard</a></div>
+</header>
+<main class="login settings">
+  <h1>Account Settings</h1>
+  <p class="hint">Logged in as <b>{{ username }}</b>. Change your username, password, or both.</p>
+  {% if saved %}<p class="okmsg" role="status">Saved. Use the new details next time you log in.</p>{% endif %}
+  {% if error %}<p class="err" role="alert">{{ error }}</p>{% endif %}
+  <form method="post" autocomplete="off">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <label>Current password (required)<input name="current_password" type="password" required autocomplete="current-password"></label>
+    <label>New username (leave empty to keep "{{ username }}")<input name="new_username" autocomplete="off"></label>
+    <label>New password (leave empty to keep current)<input name="new_password" type="password" minlength="8" autocomplete="new-password"></label>
+    <label>Confirm new password<input name="confirm_password" type="password" autocomplete="new-password"></label>
+    <button class="btn" type="submit">Save Changes</button>
+  </form>
+</main>
+</body>
+</html>
